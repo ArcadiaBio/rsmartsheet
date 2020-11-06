@@ -8,6 +8,7 @@ set_smartsheet_api_key(key)
 }
 \arguments{
 \item{key}{a string for the API key you want to use}
+\item{sheetID}{a sheet ID that you have access to (for testing the api key).}
 }
 \value{
 if this function works it returns nothing
@@ -17,6 +18,6 @@ Set the api key for acessing Smartsheet
 }
 \examples{
 \dontrun{
-set_smartsheet_api_key("yourAPIkey")
+set_smartsheet_api_key("yourAPIkey", "yourSheetID")
 }
 }
