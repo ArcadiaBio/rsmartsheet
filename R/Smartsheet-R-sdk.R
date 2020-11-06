@@ -20,10 +20,10 @@ pkg.globals$working_folder_id <- "NONE"
 #'
 #' @examples
 #' \dontrun{
-#' set_smartsheet_api_key("yourAPIkey")
+#' set_smartsheet_api_key("yourAPIkey", "yourSheetID)
 #' }
-set_smartsheet_api_key <- function(key) {
-  r <- httr::GET("https://api.smartsheet.com/2.0/folders/411795358803844/folders", add_headers('Authorization' = paste('Bearer',key, sep = ' ')))
+set_smartsheet_api_key <- function(key, test_sheet_id) {
+  r <- httr::GET(paste("https://api.smartsheet.com/2.0/sheets/", test_sheet_id, sep = ''), add_headers('Authorization' = paste('Bearer',key, sep = ' ')))
   if(grepl("errorCode",content(r, "text"))){
     stop("Smartsheet Error: Your API key was invalid.")
   }
