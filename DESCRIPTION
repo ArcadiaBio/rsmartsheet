@@ -3,7 +3,7 @@ Type: Package
 Title: R SDK For Smartsheet
 Version: 1.0.2
 Author: Ryan Taylor
-Maintainer: Ryan Taylor (ryan.taylor@arcadiabio.com)
+Maintainer: Ryan Taylor
 Description: This is an R package that takes advantage of httr to interface with Smartsheet.
     It can be used to download smartsheets and attachments to smartsheets as well as other functions.
     Forked from elias-jhsph/rmsartsheet
