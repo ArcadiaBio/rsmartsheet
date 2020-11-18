@@ -178,22 +178,36 @@ delete_sheet_by_name<-function(sheet_name){
 #'
 #' @examples
 #' \dontrun{
-#' get_sheet_as_csv("sheet_name")
+#' get_sheet_as_csv("sheet", "sheet identifier type")
 #' }
-get_sheet_as_csv<-function(sheet_name){
+get_sheet_as_csv<-function(sheet, type = "name"){
   if(pkg.globals$api_key == "NONE"){
     stop("rsmartsheet Error: Please set your api key with set_smartsheet_api_key() to use this function.")
   }
+
   r <- httr::GET("https://api.smartsheet.com/2.0/sheets?&includeAll=true", add_headers('Authorization' = paste('Bearer',pkg.globals$api_key, sep = ' ')))
   sheets_listed <- jsonlite::fromJSON(content(r, "text"))
-  if(sum(sheets_listed$data['name'] == sheet_name)>1){
-    stop("rsmartsheet Error: More than 1 sheet found with that name")
+
+  if (type == "name") {
+    if(sum(sheets_listed$data['name'] == sheet)>1){
+      stop("rsmartsheet Error: More than 1 sheet found with that name")
+    }
+    if(sum(sheets_listed$data['name'] == sheet)==0){
+      stop("rsmartsheet Error: No sheet found with that name")
+    }
+    id <- toString(sheets_listed$data$id[sheets_listed$data$name == sheet])
+    return(content(httr::GET(paste("https://api.smartsheet.com/2.0/sheets",id,sep='/'), add_headers('Authorization' = paste('Bearer',pkg.globals$api_key, sep = ' '), 'Accept' = 'text/csv')), "text"))
+  } else if (type == "id") {
+    sheet <- toString(sheet)
+    if(sum(sheets_listed$data['id'] == sheet)>1){
+      stop("rsmartsheet Error: More than 1 sheet found with that id")
+    }
+    if(sum(sheets_listed$data['id'] == sheet) == 0){
+      stop("rsmartsheet Error: No sheet found with that id")
+    }
+    id <- toString(sheet)
+    return(content(httr::GET(paste("https://api.smartsheet.com/2.0/sheets",id,sep='/'), add_headers('Authorization' = paste('Bearer',pkg.globals$api_key, sep = ' '), 'Accept' = 'text/csv')), "text"))
   }
-  if(sum(sheets_listed$data['name'] == sheet_name)==0){
-    stop("rsmartsheet Error: No sheet found with that name")
-  }
-  id <- toString(sheets_listed$data$id[sheets_listed$data$name == sheet_name])
-  return(content(httr::GET(paste("https://api.smartsheet.com/2.0/sheets",id,sep='/'), add_headers('Authorization' = paste('Bearer',pkg.globals$api_key, sep = ' '), 'Accept' = 'text/csv')), "text"))
 }
 
 
